@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи</title>
+</head>
+<body>
+<h1>Информация о пользователях</h1>
+
+<form th:action="@{/admin/registration}" th:method="GET" th:object="${users}">
+    <input type="submit" value="Добавить нового пользователя">
+</form>
+
+<table>
+    <caption><h2>Список всех пользователей </h2></caption>
+    <tr>
+        <th>Id</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Возраст</th>
+        <th>Email</th>
+        <th>Логин</th>
+        <th>Роли</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getId()}">Id</td>
+        <td th:text="${user.getName()}">Имя</td>
+        <td th:text="${user.getLastName()}">Фамилия</td>
+        <td th:text="${user.getAge()}">Возраст</td>
+        <td th:text="${user.getEmail()}">Email</td>
+        <td th:text="${user.getUsername()}">Логин</td>
+        <td th:text="${user.getAuthorities()}">Логин</td>
+        <td>
+            <form th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:method="GET" th:object="${user}">
+                <input type="submit" value="Изменить">
+            </form>
+        </td>
+
+        <td>
+            <form th:action="@{/admin/delete/{id}(id=${user.getId()})}" th:method="DELETE">
+                <input type="submit" value="Удалить">
+            </form>
+        </td>
+    </tr>
+</table>
+<br>
+<div>
+    <form action="/admin/logout" method="post">
+        <input type="submit" value="Log out"/>
+    </form>
+</div>
+<br>
+<div>
+    <form action="/" method="get">
+        <input type="submit" value="На главную"/>
+    </form>
+</div>
+<br>
+</body>
+</html>
+<!---
+<td>
+            <div th:each="role : ${user.getRoles()}">
+                <span th:text="${role.getRole()}"></span>
+            </div>
+        <td>-->

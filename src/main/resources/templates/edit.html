@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменить пользователя</title>
+</head>
+<body>
+<h1>Введите данные для редактирования</h1>
+<br>
+<form th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:method="PUT" th:object="${user}">
+
+    <label for="name">Имя</label>
+    <input id="name" th:field="*{name}" type="text">
+    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error</div><br><p></p>
+    <br>
+
+    <label for="lastName">Фамилия</label>
+    <input id="lastName" th:field="*{lastName}" type="text">
+    <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">last name error</div><br><p></p>
+    <br><br>
+
+    <label for="age">Возраст</label>
+    <input id="age" th:field="*{age}" type="text">
+    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age error</div><br><p></p>
+    <br><br>
+
+    <label for="email"> Email</label>
+    <input id="email" th:field="*{email}" type="text">
+    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</div><br><p></p>
+    <br><br>
+
+    <label for="username"> Логин</label>
+    <input id="username" th:field="*{username}" type="text">
+    <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">username error</div><br><p></p>
+    <br><br>
+
+    <label for="password">Пароль:</label>
+    <input id="password" th:field="*{password}" type="text">
+    <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</div><br><p></p>
+    <br><br>
+
+    <label>Выбрать роль
+        <br>
+        <select id="roles" multiple="multiple" th:field="*{roles}">
+            <option th:each="role: ${roles}"
+                    th:text="${role.getRole}"
+                    th:value="${role.getId()}">
+            </option>
+        </select>
+    </label>
+    <br><br>
+    <input type="submit" value="Изменить данные пользователя"/>
+</form>
+</body>
+</html>

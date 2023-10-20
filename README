@@ -1,0 +1,10 @@
+For entrance as Admin:
+login - admin
+password - admin
+
+For entrance as User:
+login - user
+password - user
+
+Run app
+Run create_table.sql
