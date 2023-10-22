@@ -1,24 +1,99 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Персональная страница</title>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+
+    <title>User page</title>
 </head>
 <body>
-<div>
-    <p th:text="${helloMessage}"></p>
-</div>
-<p th:text="${user.getId()}">Id</p>
-<p th:text="${user.getName()}">Имя</p>
-<p th:text="${user.getLastName()}">Фамилия</p>
-<p th:text="${user.getAge()}">Возраст</p>
-<p th:text="${user.getEmail()}">Email</p>
-<p th:text="${user.getUsername()}">Логин</p>
-<p th:text="${user.getAuthorities()}">Роли</p>
+<!--Приветствие в шапке с логином и ролями-->
+<header>
+    <nav class="navbar navbar-dark bg-dark navbar-fixed-top">
+        <div class="container-fluid text-white">
+            <span class="navbar-header">
+                <span th:text="${principalUser.getUsername()}"></span>
+                <span> with roles: </span>
+                <span th:each="role : ${principalUser.getAuthorities()}"
+                      th:text="${role.getRole().replace('ROLE_', '') + ' '}">
+                </span>
+            </span>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
 
-<br>
-<div>
-    <input onclick="history.go(-1)" type="button" value="Назад">
+<div class="container-fluid">
+    <div class="row">
+        <!--- Устанавливаем навигацию с вертикальными подушками--->
+
+        <div class="col-3">
+            <!--- Устанавливаем навигацию с вертикальными "подушками"--->
+            <div aria-orientation="vertical" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                <a aria-controls="v-pills-admin" aria-selected="true"
+                   class="nav-link active" href="/admin"
+                   role="tab" sec:authorize="hasAuthority('ROLE_ADMIN')">Admin</a>
+                <a aria-controls="v-pills-user" aria-selected="false" class="nav-link"
+                   href="/user"
+                   role="tab" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')">User</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <h2>User information page</h2>
+            <table class="table table-striped">
+                <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+                </ul>
+                <nav class="navbar navbar-light bg-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">About user</a>
+                    </div>
+                </nav>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">LastName</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Login</th>
+                    <th scope="col">Role</th>
+                </tr>
+                <tbody>
+                <tr>
+                    <td th:text="${principalUser.id}">Id</td>
+                    <td th:text="${principalUser.name}">Имя</td>
+                    <td th:text="${principalUser.lastName}">Фамилия</td>
+                    <td th:text="${principalUser.age}">Возраст</td>
+                    <td th:text="${principalUser.email}">Email</td>
+                    <td th:text="${principalUser.username}">Email</td>
+                    <td>
+         <span th:each="role : ${principalUser.getRoles()}"
+               th:switch="${role.getRole()}">
+               <span th:case="'ROLE_ADMIN'">ADMIN</span>
+               <span th:case="'ROLE_USER'">USER</span>
+              </span>
+                    </td>
+                <tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 </body>
 </html>

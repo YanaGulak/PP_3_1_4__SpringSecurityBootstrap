@@ -30,7 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
-    //настройка секьюрности по определенным URL, а также настройка UserDetails и GrantedAuthority
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -38,16 +37,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/login").permitAll()
-                .and()//разделитель
+                .and()
                 .formLogin()
                 .successHandler(successUserHandler)
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();//разлогиниться можно всем
+                .permitAll();
     }
-//Для входа под именем администратора: login/password = yana/yana
-
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {

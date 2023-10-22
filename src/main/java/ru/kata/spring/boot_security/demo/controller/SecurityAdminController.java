@@ -1,7 +1,9 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -29,18 +31,44 @@ public class SecurityAdminController {
     }
 
     //выводим всех пользователей на view "admin"
-    @GetMapping
-    public String showUsers(ModelMap model) {
-        model.addAttribute("users", userService.findAll());
+    @GetMapping()
+    public String showUsers(Model model, @AuthenticationPrincipal User principalUser) {
+        model.addAttribute("principalUser", principalUser);
+        model.addAttribute("usersSet", userService.findAll());// Добавили всех юзеров из БД
+        model.addAttribute("roles", roleService.findAll()); //Добавили все роли из БД
         return "admin";
+    }
+
+    //получаем пользователя по id
+    @GetMapping("/user/{id}")
+    public String findUser(@PathVariable("id") Long id, Model model) {
+        User user = userService.findUserById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("roles", user.getRoles());
+        return "user";
     }
 
     //получаем форму для добавления нового пользователя
     @GetMapping("/registration")
-    public String createForm(ModelMap model, User user) {
-        model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.findAll()); //чтобы в представлении поставить галочку у нужной роли
-        return "/registration";
+    public String createForm(ModelMap model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", roleService.findAll());
+        return REDIRECT;
+    }
+
+    //получаем форму на изменения
+    @GetMapping("/edit/{id}")
+    public String updateForm(ModelMap model, @PathVariable("id") Long id) {
+        model.addAttribute("user", userService.findUserById(id));
+        model.addAttribute("roles", roleService.findAll());
+        return REDIRECT;
+    }
+
+    //удаляем пользователя
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        userService.deleteUserById(id);
+        return REDIRECT;
     }
 
     //создаем нового
@@ -56,13 +84,6 @@ public class SecurityAdminController {
         return REDIRECT;
     }
 
-    //получаем форму на изменения
-    @GetMapping("/edit/{id}")
-    public String updateForm(ModelMap model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.findUserById(id));
-        model.addAttribute("roles", roleService.findAll());
-        return "edit";
-    }
 
     // меняем данные пользователя
     @PutMapping("/edit/{id}")
@@ -79,10 +100,4 @@ public class SecurityAdminController {
         return REDIRECT;
     }
 
-    //удаляем пользователя
-    @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        userService.deleteUserById(id);
-        return REDIRECT;
-    }
 }
