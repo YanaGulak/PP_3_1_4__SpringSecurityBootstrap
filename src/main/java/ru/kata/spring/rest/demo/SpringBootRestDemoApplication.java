@@ -1,13 +1,13 @@
-package ru.kata.spring.boot_security.demo;
+package ru.kata.spring.rest.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootSecurityDemoApplication {
+public class SpringBootRestDemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootSecurityDemoApplication.class, args);
+        SpringApplication.run(SpringBootRestDemoApplication.class, args);
     }
 
 }

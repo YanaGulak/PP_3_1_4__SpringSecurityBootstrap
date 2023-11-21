@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.configs;
+package ru.kata.spring.rest.demo.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.CustomUserDetailsService;
+import ru.kata.spring.rest.demo.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -32,11 +32,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+     /*   http.authorizeRequests()
+                .antMatchers("/api/**").permitAll()
+               // .antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
+                .and().formLogin().permitAll()
+                .and().logout().permitAll()
+                .and().httpBasic();
+        http.cors().disable()
+                .csrf().disable();*/
+
         http
+        // .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/login").permitAll()
+                .antMatchers("/api/users/**").hasRole("ADMIN")
+                .antMatchers("/api/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/login", "/index")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .formLogin()
                 .successHandler(successUserHandler)
@@ -44,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll();
+
     }
 
     @Bean
@@ -60,3 +75,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(8);
     }
 }
+/*  `@Override
+protected void configure(HttpSecurity http) throws Exception {
+http.authorizeRequests()
+.antMatchers("/api/**").hasRole("ADMIN")
+.antMatchers("/**")
+.permitAll()
+.anyRequest()
+.authenticated()
+ .and()
+ .formLogin()
+ .permitAll()
+ .and()
+ .logout()
+ .permitAll()
+ .and()
+ .httpBasic();
+ http.cors().disable().csrf().disable(); }`*/

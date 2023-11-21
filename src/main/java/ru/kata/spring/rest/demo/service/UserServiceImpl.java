@@ -1,12 +1,13 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.rest.demo.service;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.DAO.UserRepository;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.rest.demo.DAO.UserRepository;
+import ru.kata.spring.rest.demo.model.Role;
+import ru.kata.spring.rest.demo.model.User;
+import ru.kata.spring.rest.demo.util.UserNotFoundException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,19 +39,12 @@ public class UserServiceImpl implements UserService {
     public User findUserById(Long id) {
         User userFromDB = userRepository.findUserById(id);
         if (userFromDB == null) {
-            throw new UsernameNotFoundException(String.format("Пользователь с id = %d не найден", id));
+            throw new UserNotFoundException(String.format("Пользователь с id = %d не найден", id));
         }
         return userFromDB;
     }
 
-//    @Override
-//    public User findByUsername(String username) {
-//        User userDB = userRepository.findByUsername(username);
-//        if (userDB == null) {
-//            throw new UsernameNotFoundException(String.format("Пользователь с логином = %s не найден", username));
-//        }
-//        return userDB;
-//    }
+
 
     @Transactional
     @Override
@@ -74,6 +68,15 @@ public class UserServiceImpl implements UserService {
             userRepository.updateUser(user);
         }
         userRepository.updateUser(user);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        User userFromDB = userRepository.findByUsername(username);
+        if (userFromDB == null) {
+            throw new UsernameNotFoundException(String.format("Пользователь с username = %s не найден", username));
+        }
+        return userFromDB;
     }
 
 
@@ -100,13 +103,4 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-//    private List <Role> convertToListRoles(List<String> stringList) {
-//        List<Role> listOfRoles = new ArrayList<>();
-//        for (String st:
-//                stringList) {
-//            listOfRoles.add(roleRepository.findRoleById(st));
-//        }
-//
-//        return listOfRoles;
-//    }
 }

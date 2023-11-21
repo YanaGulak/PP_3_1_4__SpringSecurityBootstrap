@@ -1,8 +1,8 @@
-package ru.kata.spring.boot_security.demo.DAO;
+package ru.kata.spring.rest.demo.DAO;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.rest.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
